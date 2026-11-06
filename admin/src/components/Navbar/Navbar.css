@@ -1,0 +1,36 @@
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 4%;
+}
+.navbar .logo{
+    width: max(10%,80px);
+}
+.navbar .profile{
+    width: 40px;
+}
+.login-conditon{
+    font-size: 20px;
+}
+.admin-brand-container {
+    display: flex;
+    flex-direction: column;
+}
+.brand-title {
+    color: tomato;
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1;
+}
+.brand-dot {
+    color: #49557e;
+}
+.admin-badge {
+    color: #49557e;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}

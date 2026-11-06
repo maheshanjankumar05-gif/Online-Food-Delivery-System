@@ -1,0 +1,12 @@
+{
+  "name": "quickbite-food-delivery",
+  "version": "1.0.0",
+  "description": "Unified QuickBite Food Delivery Application",
+  "scripts": {
+    "install:all": "npm install --prefix backend && npm install --prefix frontend && npm install --prefix admin",
+    "build:frontend": "npm run build --prefix frontend",
+    "build:admin": "npm run build --prefix admin",
+    "build": "npm run build:frontend && npm run build:admin",
+    "start": "npm start --prefix backend"
+  }
+}
