@@ -17,6 +17,12 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 4000;
 
+// Ensure uploads folder exists
+const uploadsDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 // middlewares
 app.use(express.json());
 app.use(cors());
@@ -26,7 +32,7 @@ connectDB();
 
 // API endpoints
 app.use("/api/food", foodRouter);
-app.use("/images", express.static(path.join(__dirname, "uploads")));
+app.use("/images", express.static(uploadsDir));
 app.use("/api/user", userRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
@@ -49,10 +55,10 @@ if (fs.existsSync(frontendDistPath)) {
   });
 } else {
   app.get("/", (req, res) => {
-    res.send("QuickBite API is running. Run 'npm run build' to generate frontend and admin bundles.");
+    res.send("QuickBite API is running. Build frontend and admin to serve UI.");
   });
 }
 
-app.listen(port, () => {
-  console.log(`Server Started on port: ${port}`);
+app.listen(port, "0.0.0.0", () => {
+  console.log(`Server started successfully on port ${port} (0.0.0.0:${port})`);
 });
