@@ -5,8 +5,10 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import StoreContextProvider from "./context/StoreContext.jsx";
 
+const basename = window.location.pathname.startsWith("/admin") ? "/admin" : "/";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <BrowserRouter basename="/admin">
+  <BrowserRouter basename={basename}>
     <StoreContextProvider>
       <App />
     </StoreContextProvider>

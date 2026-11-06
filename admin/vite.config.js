@@ -1,9 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// https://vitejs.dev/config/
+// Standalone Vercel deployment uses '/', unified Express/Render uses '/admin/'
+const base = process.env.VERCEL ? '/' : (process.env.VITE_BASE || '/admin/');
+
 export default defineConfig({
-  base: '/admin/',
+  base: base,
   plugins: [react()],
 })
-

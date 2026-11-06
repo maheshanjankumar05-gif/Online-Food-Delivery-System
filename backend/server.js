@@ -25,19 +25,38 @@ if (!fs.existsSync(uploadsDir)) {
 
 // middlewares
 app.use(express.json());
-app.use(cors());
+
+// Enable CORS for Vercel, localhost, and all external clients
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "token", "Authorization"],
+  })
+);
 
 // DB connection
 connectDB();
 
 // API endpoints
 app.use("/api/food", foodRouter);
-app.use("/images", express.static(uploadsDir));
+
+// Serve static images with cross-origin headers for Vercel frontends
+app.use(
+  "/images",
+  (req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Cross-Origin-Resource-Policy", "cross-origin");
+    next();
+  },
+  express.static(uploadsDir)
+);
+
 app.use("/api/user", userRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
 
-// Serve Admin Panel at /admin
+// Serve Admin Panel at /admin if built locally/unified
 const adminDistPath = path.join(__dirname, "../admin/dist");
 if (fs.existsSync(adminDistPath)) {
   app.use("/admin", express.static(adminDistPath));
@@ -46,7 +65,7 @@ if (fs.existsSync(adminDistPath)) {
   });
 }
 
-// Serve Customer Frontend at /
+// Serve Customer Frontend at / if built locally/unified
 const frontendDistPath = path.join(__dirname, "../frontend/dist");
 if (fs.existsSync(frontendDistPath)) {
   app.use(express.static(frontendDistPath));
@@ -55,7 +74,11 @@ if (fs.existsSync(frontendDistPath)) {
   });
 } else {
   app.get("/", (req, res) => {
-    res.send("QuickBite API is running. Build frontend and admin to serve UI.");
+    res.json({
+      status: "online",
+      message: "QuickBite Backend API is live on Render!",
+      timestamp: new Date().toISOString(),
+    });
   });
 }
 

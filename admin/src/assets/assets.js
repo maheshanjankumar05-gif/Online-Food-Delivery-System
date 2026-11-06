@@ -14,4 +14,4 @@ export const assets ={
     parcel_icon
 }
 
-export const url = window.location.origin
+export const url = import.meta.env.VITE_BACKEND_URL || window.location.origin;

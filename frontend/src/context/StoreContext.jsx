@@ -13,7 +13,8 @@ export const availablePromos = [
 
 const StoreContextProvider = (props) => {
   const [cartItems, setCartItems] = useState({});
-  const url = window.location.origin;
+  // Uses VITE_BACKEND_URL when deployed on Vercel, or defaults to current origin
+  const url = import.meta.env.VITE_BACKEND_URL || window.location.origin;
   const [token, setToken] = useState("");
   const [food_list, setFoodList] = useState([]);
   const [appliedPromo, setAppliedPromo] = useState(null);
