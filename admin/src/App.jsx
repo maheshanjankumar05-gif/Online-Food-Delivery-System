@@ -9,8 +9,24 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./components/Login/Login";
 
+export const getBackendUrl = () => {
+  if (import.meta.env.VITE_BACKEND_URL) {
+    return import.meta.env.VITE_BACKEND_URL.replace(/\/+$/, "");
+  }
+  if (typeof window !== "undefined") {
+    // If running on local Vite dev server (port 5173, 5174, etc.)
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+      if (window.location.port !== "4000") {
+        return "http://localhost:4000";
+      }
+    }
+    return window.location.origin;
+  }
+  return "http://localhost:4000";
+};
+
 const App = () => {
-  const url = import.meta.env.VITE_BACKEND_URL || window.location.origin;
+  const url = getBackendUrl();
   return (
     <div>
       <ToastContainer />

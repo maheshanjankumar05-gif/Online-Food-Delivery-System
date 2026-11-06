@@ -13,6 +13,7 @@ const Login = ({ url }) => {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
   const onChangeHandler = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -20,20 +21,29 @@ const Login = ({ url }) => {
   };
   const onLogin = async (event) => {
     event.preventDefault();
-    const response = await axios.post(url + "/api/user/login", data);
-    if (response.data.success) {
-      if (response.data.role === "admin") {
-        setToken(response.data.token);
-        setAdmin(true);
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("admin", true);
-        toast.success("Login Successfully");
-        navigate("/add")
-      }else{
-        toast.error("You are not an admin");
+    setLoading(true);
+    try {
+      const response = await axios.post(url + "/api/user/login", data);
+      if (response.data.success) {
+        if (response.data.role === "admin") {
+          setToken(response.data.token);
+          setAdmin(true);
+          localStorage.setItem("token", response.data.token);
+          localStorage.setItem("admin", true);
+          toast.success("Login Successful! Welcome to QuickBite Admin");
+          navigate("/add");
+        } else {
+          toast.error("Access denied: You do not have admin permissions.");
+        }
+      } else {
+        toast.error(response.data.message || "Invalid email or password");
       }
-    } else {
-      toast.error(response.data.message);
+    } catch (err) {
+      console.error("Admin Login Error:", err);
+      const msg = err.response?.data?.message || err.message || "Unable to reach backend server";
+      toast.error(msg);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(()=>{
@@ -65,7 +75,9 @@ const Login = ({ url }) => {
             required
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
     </div>
   );

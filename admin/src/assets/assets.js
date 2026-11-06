@@ -14,4 +14,19 @@ export const assets ={
     parcel_icon
 }
 
-export const url = import.meta.env.VITE_BACKEND_URL || window.location.origin;
+export const getBackendUrl = () => {
+  if (import.meta.env.VITE_BACKEND_URL) {
+    return import.meta.env.VITE_BACKEND_URL.replace(/\/+$/, "");
+  }
+  if (typeof window !== "undefined") {
+    if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+      if (window.location.port !== "4000") {
+        return "http://localhost:4000";
+      }
+    }
+    return window.location.origin;
+  }
+  return "http://localhost:4000";
+};
+
+export const url = getBackendUrl();
