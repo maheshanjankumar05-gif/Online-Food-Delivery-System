@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { assets } from "../assets/frontend_assets/assets";
 
 export const StoreContext = createContext(null);
 
@@ -116,12 +117,15 @@ const StoreContextProvider = (props) => {
   const fetchFoodList = async () => {
     try {
       const response = await axios.get(url + "/api/food/list");
-      if (response.data.success) {
+      if (response.data.success && Array.isArray(response.data.data) && response.data.data.length > 0) {
         setFoodList(response.data.data);
+        return;
       }
     } catch (err) {
-      console.error("Error fetching food list:", err);
+      console.error("Error fetching food list from API:", err);
     }
+    // Fallback to bundled dishes if API is empty or connecting
+    setFoodList((prev) => (prev && prev.length > 0 ? prev : assets.food_list));
   };
 
   const loadCardData = async (token) => {
